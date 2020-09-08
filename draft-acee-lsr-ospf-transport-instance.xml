@@ -8,6 +8,8 @@
         <!ENTITY rfc6549 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.6549.xml'> 
         <!ENTITY rfc6823 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.6823.xml'> 
         <!ENTITY rfc8174 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.8174.xml'> 
+        <!ENTITY I-D.wang-lsr-igp-extensions-ifit PUBLIC ''
+      'http://xml.resource.org/public/rfc/bibxml-ids/reference.I-D.draft-wang-lsr-igp-extensions-ifit-01.xml'>
         ]>
 <?rfc toc="yes"?>
 <?rfc tocompact="no"?>
@@ -132,6 +134,50 @@
         when, and only when, they appear in all capitals, as shown here.</t>
      </section>
 
+     <section title="Possible Use Cases">
+      <section title="MEC Service Discovery">
+        <t>Multi-Access Edge Computing (MEC) plays an important role in 
+          5G architecture. MEC optimizes the performance for ultra-low 
+          latency and high bandwidth services by providing networking 
+          and computing at the edge of the network <xref target="ETSI-WP28-MEC"/>. 
+          To achieve this goal, it’s important to expose the network 
+          capabilities and services of a MEC to UEs.</t>
+        <t>The followings are an incomplete list of the kind of 
+          information that OSPF transport instance can help to 
+          disseminate:
+          <list style="symbols"> 
+          <t>A network service is realized using one or more physical or 
+            virtualized hosts in MEC, and the locations of these service 
+            points might change. The auto-discovery of these service 
+            locations can be achieved using an OSPF transport instance.</t>
+          <t>UEs might be mobile, and MEC should support service 
+            continuity and application mobility. This may require service 
+            state transferring and synchronization. OSPF transport 
+            instance can be used to synchronize these states.</t>
+          <t>Network resources are limited, such as computing power, 
+            storage. The availability of such resources is dynamic, and 
+            OSPF transport instance can be used to populate such 
+            information, so applications can pick the right location of 
+            such resources, hence improve user experience and resource 
+            utilization.</t>
+          </list></t>
+      </section>
+      <section title="Application Data Dissemination">
+        <t>Typically a network consists of routers from different 
+          vendors with different capabilities, and some applications may 
+          want to know whether a router supports certain functionality 
+          or where to find a router supports a functionality, so it will 
+          be ideal if such kind of information is known to all routers 
+          or a group of routers in the network. For example, an ingress 
+          router needs to find an egress router that supports In-situ 
+          Flow Information Telemetry (IFIT) 
+          <xref target="I-D.wang-lsr-igp-extensions-ifit"/>. </t>
+        <t>OSPF transport instance can be used to populate such router 
+          capabilities/functionalities without impacting the performance 
+          of being a routing protocol.</t>
+      </section>
+     </section>
+
  <section title="OSPF Transport Instance">
      <t>  
    In order to isolate the effects of flooding and processing of non-
@@ -157,7 +203,7 @@
    </t>
  </section>  
 
- <section title="OSPFv2 Transport Instance Packet Differentiation">
+ <section title="OSPFv3 Transport Instance Packet Differentiation">
    <t>
    Fortunately, OSPFv3 already supports separate instances within the
    packet encodings.  The existing OSPFv3 packet header instance ID
@@ -301,7 +347,7 @@
    first alternative is configure tunnels to form a fully connected
    graph including only those routers in the sparse topology.  The
    second alternative is use remote neighbors as described in
-   Section 2.7.1.
+   Section 4.7.1.
   </t>
  <section title="Remote OSPF Neighbor">
    <t>
@@ -402,7 +448,7 @@
   <!--  *****BACK MATTER ***** -->
 
   <back>
-  <references title="Normative References">
+    <references title="Normative References">
           &rfc2119;
           &rfc2328;
           &rfc3630;
@@ -411,7 +457,29 @@
           &rfc6549;
           &rfc6823;
           &rfc8174;
-      </references>
+    </references>
+    <references title="Informative References">
+      &I-D.wang-lsr-igp-extensions-ifit;
+      <reference anchor="ETSI-WP28-MEC"
+
+    target="https://www.etsi.org/images/files/ETSIWhitePapers/etsi_wp28_mec_in_5G_FINAL.pdf">
+
+  <front>
+
+   <title>MEC in 5G Networks</title>
+
+   <author>
+
+     <organization>Sami Kekki, etc.</organization>
+
+   </author>
+
+   <date year="2018" />
+
+       </front>
+
+     </reference>
+    </references>
 
   </back>
 </rfc>
