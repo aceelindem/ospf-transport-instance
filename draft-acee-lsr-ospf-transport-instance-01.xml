@@ -3,11 +3,14 @@
         <!ENTITY rfc2119 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.2119.xml'> 
         <!ENTITY rfc2328 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.2328.xml'> 
         <!ENTITY rfc3630 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.3630.xml'> 
+        <!ENTITY rfc4915 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.4915.xml'> 
         <!ENTITY rfc5250 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.5250.xml'> 
         <!ENTITY rfc5340 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.5340.xml'> 
         <!ENTITY rfc6549 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.6549.xml'> 
         <!ENTITY rfc6823 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.6823.xml'> 
         <!ENTITY rfc8174 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.8174.xml'> 
+        <!ENTITY I-D.ietf-lsr-flex-algo PUBLIC ''
+      'http://xml.resource.org/public/rfc/bibxml-ids/reference.I-D.draft-ietf-lsr-flex-algo-11.xml'>
         <!ENTITY I-D.wang-lsr-igp-extensions-ifit PUBLIC ''
       'http://xml.resource.org/public/rfc/bibxml-ids/reference.I-D.draft-wang-lsr-igp-extensions-ifit-01.xml'>
         ]>
@@ -283,16 +286,34 @@
    instance SHOULD NOT install any IP or IPv6 routes.  OSPF routers
    SHOULD NOT advertise any transport instance LSAs containing IP or
    IPv6 prefixes and OSPF routers receiving LSAs advertising IP or IPv6
-   prefixes SHOULD ignore them.  This implies that an OSPFv2 transport
-   instance Link State Database should not include any summary-LSAs
-   (type 3) , AS-external-LSAs (type 5), or NSSA-LSAs (type 7) and the
-   router-LSAs should not include any stub (type 3) links.  An OSPFv3
-   transport instance Link State database should not include any inter-
-   area-prefix-LSAs (type 0x2003), AS-external-LSAs (0x4005), NSSA-LSAs
-   (type 0x2007), or intra-area-prefix-LSAs (type 0x2009).  If they are
-   erroneously advertised, they will be flooded as per standard OSPF but
-   MUST be ignored by OSPF routers supporting this specification.
-  </t>
+   prefixes SHOULD ignore them.  This implies that an OSPF transport
+   instance Link State Database should not include any of the LSAs as 
+   shown in Table 1.
+    <figure title="LSAs not included in OSPF transport instance">
+      <artwork>
+
+  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+  |   OSPFv2            |  summary-LSAs (type 3)                  |
+  |                     |  AS-external-LSAs (type 5)              |
+  |                     |  NSSA-LSAs (type 7)                     |
+  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+  |   OSPFv3            |  inter-area-prefix-LSAs (type 2003)     |
+  |                     |  AS-external-LSAs (type 0x4005)         |
+  |                     |  NSSA-LSAs (type 0x2007)                |
+  |                     |  intra-area-prefix-LSAs (type 0x2009)   |
+  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+  | OSPFv3 Extended LSA |  E-inter-area-prefix-LSAs (type 0xA023) |
+  |                     |  E-as-external-LSAs (type 0xC025)       |
+  |                     |  E-Type-7-NSSA (type 0xA027)            |
+  |                     |  E-intra-area-prefix-LSA (type 0xA029)  |
+  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+     </artwork> 
+    </figure></t>
+
+   <t>If these LSAs are erroneously advertised, they will be flooded 
+    as per standard OSPF but MUST be ignored by OSPF routers supporting 
+    this specification.
+   </t>
  </section>
 
  <section title="Non-routing Instance Separation">
@@ -373,6 +394,19 @@
     </list></t>
  </section>
  </section>
+ <section anchor="mtr" title="Multiple Topologies">
+   <t>For some applications, the information need to be flooded only to
+    a topology which is a subset of routers of the transport instance. 
+    This allows the application specific information only to be flooded 
+    to routers that support the application. A transport instance 
+    may support multiple topologies as defined in <xref target="RFC4915"/> 
+    or <xref target="I-D.ietf-lsr-flex-algo"/>. But as pointed out in 
+    section 4.5, a transport instance or topology SHOULD NOT install 
+    any IP or IPv6 routes.</t>
+   <t>Each topology associated with the transport instance MUST be 
+    fully connected in order for the LSAs to be successfully flooded 
+    to all routers in the topology.</t>
+ </section>
 </section>
 
 <section title="OSPF Transport Instance Information Encoding">
@@ -452,11 +486,13 @@
           &rfc2119;
           &rfc2328;
           &rfc3630;
+          &rfc4915;
           &rfc5250;
           &rfc5340;
           &rfc6549;
           &rfc6823;
           &rfc8174;
+          &I-D.ietf-lsr-flex-algo;
     </references>
     <references title="Informative References">
       &I-D.wang-lsr-igp-extensions-ifit;
