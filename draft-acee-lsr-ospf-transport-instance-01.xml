@@ -9,6 +9,7 @@
         <!ENTITY rfc6549 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.6549.xml'> 
         <!ENTITY rfc6823 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.6823.xml'> 
         <!ENTITY rfc8174 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.8174.xml'> 
+        <!ENTITY rfc8362 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.8362.xml'> 
         <!ENTITY I-D.ietf-lsr-flex-algo PUBLIC ''
       'http://xml.resource.org/public/rfc/bibxml-ids/reference.I-D.draft-ietf-lsr-flex-algo-11.xml'>
         <!ENTITY I-D.wang-lsr-igp-extensions-ifit PUBLIC ''
@@ -216,45 +217,17 @@
  </section>
  
 <section title="Instance Relationship to Normal OSPF Instances">
-   <t>
-   There are basically two alternatives for the relationship between a
-   normal OSPF instance and an OSPF transport instance.  In both cases,
-   we must guarantee that any information we've received is treated as
-   valid if and only if the router sending it is reachable.  We'll refer
-   to this as the "condition of reachability" in this document.
-    <list style="numbers"> 
-
-     <t>Ships in the Night - The OSPF transport instance has no
-         relationship or dependency on any other OSPF instance.</t>
-
-     <t>Child Instance - The OSPF transport instance has a child-parent
-        relationship with a normal OSPF instance and is dependent on this
-        for topology information and assuring the "condition of
-         reachability".</t>
-   </list></t>
- <section title="Ships in the Night Relationship to Normal OSPF Instances">
-   <t>
-   In this mode, the OSPF transport instance is not dependent on any
-   other OSPF instance.  It does, however, have much of the same as
-   topology information must be advertised to satisfy the "condition of
-   reachability".
-   </t>
-   <t>
-   Prefix information does not need to be advertised.  This implies that
-   for OSPFv2, only router-LSAs, network-LSAs, and type 4 summary-LSAs
-   need to be advertised.  In the router-LSAs, the stub (type 3) links
-   may be suppressed.  For OSPFv3, this implies that router-LSAs,
-   network-LSAs, and inter-area-router-LSAs must be advertised.
-   </t>
- </section>
- 
- <section title="Tighter Coupling with Normal OSPF Instances">
-  <t>
-   Further optimizations and coupling between an OSPF transport instance
-   and a normal OSPF instance are beyond the scope of this document.
-   This is an area for future study.
- </t>
-</section>
+  <t>In OSPF transport instance, we must guarantee that any information 
+    we've received is treated as valid if and only if the router 
+    sending it is reachable.  We'll refer to this as the "condition of 
+    reachability" in this document.</t>
+  <t>The OSPF transport instance is not dependent on any
+    other OSPF instance.  It does, however, have much of the same as
+    topology information must be advertised to satisfy the "condition of
+    reachability".</t>
+  <t>Further optimizations and coupling between an OSPF transport instance
+    and a normal OSPF instance are beyond the scope of this document.
+    This is an area for future study.</t>
 </section>  
 
  <section title="Network Prioritization">
@@ -451,7 +424,8 @@
  <t>
    Application specific information will be flooded in separate LSAs
    with separate function codes.  Refer to section A.4.2.1 of <xref target="RFC5340"/>.
-   for information on the LS Type encoding in OSPFv3.
+   for information on the LS Type encoding in OSPFv3, and section 2 of 
+   <xref target="RFC8362"/> for OSPFv3 extended LSA types.
 </t>
 </section>
 </section>
@@ -492,6 +466,7 @@
           &rfc6549;
           &rfc6823;
           &rfc8174;
+          &rfc8362;
           &I-D.ietf-lsr-flex-algo;
     </references>
     <references title="Informative References">
