@@ -6,6 +6,7 @@
         <!ENTITY rfc4915 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.4915.xml'>
         <!ENTITY rfc5250 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.5250.xml'>
         <!ENTITY rfc5340 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.5340.xml'>
+        <!ENTITY rfc5572 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.5572.xml'>
         <!ENTITY rfc6549 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.6549.xml'>
         <!ENTITY rfc6823 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.6823.xml'>
         <!ENTITY rfc8174 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.8174.xml'>
@@ -145,7 +146,7 @@
           latency and high bandwidth services by providing networking
           and computing at the edge of the network <xref target="ETSI-WP28-MEC"/>.
           To achieve this goal, it’s important to expose the network
-          capabilities and services of a MEC to UEs.</t>
+          capabilities and services of a MEC device to 5G User Equipment UE, i.e. UEs.</t>
         <t>The followings are an incomplete list of the kind of
           information that OSPF transport instance can help to
           disseminate:
@@ -175,11 +176,22 @@
           or a group of routers in the network. For example, an ingress
           router needs to find an egress router that supports In-situ
           Flow Information Telemetry (IFIT)
-          <xref target="I-D.wang-lsr-igp-extensions-ifit"/>. </t>
+          <xref target="I-D.wang-lsr-igp-extensions-ifit"/> and obtain
+	  IFIT parameters.</t>
         <t>OSPF transport instance can be used to populate such router
           capabilities/functionalities without impacting the performance
-          of being a routing protocol.</t>
+          or convergence of the base OSPF protocol.</t>
       </section>
+      <section title="Intra-Area Topology for BGP-LS Distribution">
+	<t>In some cases, it is desirable to limit the number of
+	BGP-LS  <xref target="RFC5572"/> sessions
+	with a controller to the a one or two routers in an OSPF domain.
+	However, many times those router(s) do not have full visibility to the
+	complete topology of all the areas. To solve this problem without extended
+	the BGP-LS domain, the OSPF LSAs for non-local area could be flooded
+	over the OSPF transport instance topology using
+	remote neighbors <xref target="remote-neighbor"/>.</t>
+      </section>	
      </section>
 
  <section title="OSPF Transport Instance">
@@ -252,7 +264,7 @@
    </t>
  </section>
 
- <section title="OSPF Transport Instance Omission of Routing Calculation">
+ <section anchor="routing-omission" title="OSPF Transport Instance Omission of Routing Calculation">
    <t>
    Since the whole point of the transport instance is to separate the
    routing and non-routing processing and fate sharing, a transport
@@ -341,9 +353,9 @@
    first alternative is configure tunnels to form a fully connected
    graph including only those routers in the sparse topology.  The
    second alternative is use remote neighbors as described in
-   Section 4.7.1.
+   <xref target="remote-neighbor"/>.
   </t>
- <section title="Remote OSPF Neighbor">
+ <section anchor="remote-neighbor" title="Remote OSPF Neighbor">
    <t>
    With sparse topologies, OSPF routers sharing non-routing information
    may not be directly connected.  OSPF adjacencies with remote
@@ -374,8 +386,8 @@
     to routers that support the application. A transport instance
     may support multiple topologies as defined in <xref target="RFC4915"/>
     or <xref target="I-D.ietf-lsr-flex-algo"/>. But as pointed out in
-    section 4.5, a transport instance or topology SHOULD NOT install
-    any IP or IPv6 routes.</t>
+    <xref target="routing-omission"/>, a transport instance or topology
+    SHOULD NOT install any IP or IPv6 routes.</t>
    <t>Each topology associated with the transport instance MUST be
     fully connected in order for the LSAs to be successfully flooded
     to all routers in the topology.</t>
@@ -470,6 +482,7 @@
           &I-D.ietf-lsr-flex-algo;
     </references>
     <references title="Informative References">
+      &rfc5572;
       &I-D.wang-lsr-igp-extensions-ifit;
       <reference anchor="ETSI-WP28-MEC"
 
