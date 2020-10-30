@@ -11,8 +11,6 @@
         <!ENTITY rfc6823 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.6823.xml'>
         <!ENTITY rfc8174 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.8174.xml'>
         <!ENTITY rfc8362 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.8362.xml'>
-        <!ENTITY I-D.ietf-lsr-flex-algo PUBLIC ''
-      'http://xml.resource.org/public/rfc/bibxml-ids/reference.I-D.draft-ietf-lsr-flex-algo-11.xml'>
         <!ENTITY I-D.wang-lsr-igp-extensions-ifit PUBLIC ''
       'http://xml.resource.org/public/rfc/bibxml-ids/reference.I-D.draft-wang-lsr-igp-extensions-ifit-01.xml'>
         ]>
@@ -384,9 +382,9 @@
     a topology which is a subset of routers of the transport instance.
     This allows the application specific information only to be flooded
     to routers that support the application. A transport instance
-    may support multiple topologies as defined in <xref target="RFC4915"/>
-    or <xref target="I-D.ietf-lsr-flex-algo"/>. But as pointed out in
-    <xref target="routing-omission"/>, a transport instance or topology
+    may support multiple topologies as defined in <xref target="RFC4915"/>. 
+    But as pointed out in <xref target="routing-omission"/>, a transport 
+    instance or topology
     SHOULD NOT install any IP or IPv6 routes.</t>
    <t>Each topology associated with the transport instance MUST be
     fully connected in order for the LSAs to be successfully flooded
@@ -479,7 +477,6 @@
           &rfc6823;
           &rfc8174;
           &rfc8362;
-          &I-D.ietf-lsr-flex-algo;
     </references>
     <references title="Informative References">
       &rfc5572;
