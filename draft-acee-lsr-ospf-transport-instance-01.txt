@@ -5,16 +5,16 @@
 LSR Workgroup                                                  A. Lindem
 Internet-Draft                                             Cisco Systems
 Intended status: Standards Track                                   Y. Qu
-Expires: April 15, 2021                                        Futurewei
+Expires: May 6, 2021                                           Futurewei
                                                                   A. Roy
                                                             Arrcus, Inc.
                                                             S. Mirtorabi
                                                            Cisco Systems
-                                                        October 12, 2020
+                                                        November 2, 2020
 
 
                    OSPF Transport Instance Extensions
-               draft-acee-lsr-ospf-transport-instance-00
+               draft-acee-lsr-ospf-transport-instance-01
 
 Abstract
 
@@ -44,7 +44,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on April 15, 2021.
+   This Internet-Draft will expire on May 6, 2021.
 
 
 
@@ -53,9 +53,9 @@ Status of This Memo
 
 
 
-Lindem, et al.           Expires April 15, 2021                 [Page 1]
+Lindem, et al.             Expires May 6, 2021                  [Page 1]
 
-Internet-Draft           OSPF Transport Instance            October 2020
+Internet-Draft           OSPF Transport Instance           November 2020
 
 
 Copyright Notice
@@ -109,9 +109,9 @@ Table of Contents
 
 
 
-Lindem, et al.           Expires April 15, 2021                 [Page 2]
+Lindem, et al.             Expires May 6, 2021                  [Page 2]
 
-Internet-Draft           OSPF Transport Instance            October 2020
+Internet-Draft           OSPF Transport Instance           November 2020
 
 
 1.  Introduction
@@ -165,9 +165,9 @@ Internet-Draft           OSPF Transport Instance            October 2020
 
 
 
-Lindem, et al.           Expires April 15, 2021                 [Page 3]
+Lindem, et al.             Expires May 6, 2021                  [Page 3]
 
-Internet-Draft           OSPF Transport Instance            October 2020
+Internet-Draft           OSPF Transport Instance           November 2020
 
 
       and synchronization.  OSPF transport instance can be used to
@@ -221,9 +221,9 @@ Internet-Draft           OSPF Transport Instance            October 2020
 
 
 
-Lindem, et al.           Expires April 15, 2021                 [Page 4]
+Lindem, et al.             Expires May 6, 2021                  [Page 4]
 
-Internet-Draft           OSPF Transport Instance            October 2020
+Internet-Draft           OSPF Transport Instance           November 2020
 
 
 4.1.  OSPFv2 Transport Instance Packet Differentiation
@@ -277,9 +277,9 @@ Internet-Draft           OSPF Transport Instance            October 2020
 
 
 
-Lindem, et al.           Expires April 15, 2021                 [Page 5]
+Lindem, et al.             Expires May 6, 2021                  [Page 5]
 
-Internet-Draft           OSPF Transport Instance            October 2020
+Internet-Draft           OSPF Transport Instance           November 2020
 
 
 4.5.  OSPF Transport Instance Omission of Routing Calculation
@@ -333,9 +333,9 @@ Internet-Draft           OSPF Transport Instance            October 2020
 
 
 
-Lindem, et al.           Expires April 15, 2021                 [Page 6]
+Lindem, et al.             Expires May 6, 2021                  [Page 6]
 
-Internet-Draft           OSPF Transport Instance            October 2020
+Internet-Draft           OSPF Transport Instance           November 2020
 
 
    o  The instance boundary offers much better separation for allocation
@@ -389,9 +389,9 @@ Internet-Draft           OSPF Transport Instance            October 2020
 
 
 
-Lindem, et al.           Expires April 15, 2021                 [Page 7]
+Lindem, et al.             Expires May 6, 2021                  [Page 7]
 
-Internet-Draft           OSPF Transport Instance            October 2020
+Internet-Draft           OSPF Transport Instance           November 2020
 
 
    o  All OSPF packets have the remote neighbor's configured IP address
@@ -412,10 +412,9 @@ Internet-Draft           OSPF Transport Instance            October 2020
    topology which is a subset of routers of the transport instance.
    This allows the application specific information only to be flooded
    to routers that support the application.  A transport instance may
-   support multiple topologies as defined in [RFC4915] or
-   [I-D.ietf-lsr-flex-algo].  But as pointed out in Section 4.5, a
-   transport instance or topology SHOULD NOT install any IP or IPv6
-   routes.
+   support multiple topologies as defined in [RFC4915].  But as pointed
+   out in Section 4.5, a transport instance or topology SHOULD NOT
+   install any IP or IPv6 routes.
 
    Each topology associated with the transport instance MUST be fully
    connected in order for the LSAs to be successfully flooded to all
@@ -441,17 +440,16 @@ Internet-Draft           OSPF Transport Instance            October 2020
 
                                 TLV Format
 
-
-
-
-
-Lindem, et al.           Expires April 15, 2021                 [Page 8]
-
-Internet-Draft           OSPF Transport Instance            October 2020
-
-
    However, each unique application using the mechanisms defined in this
    document will have it's own unique ID.  Whether to encode this ID as
+
+
+
+Lindem, et al.             Expires May 6, 2021                  [Page 8]
+
+Internet-Draft           OSPF Transport Instance           November 2020
+
+
    the top-level TLV or make it part of the OSPF LSA ID is open for
    debate.
 
@@ -488,27 +486,25 @@ Internet-Draft           OSPF Transport Instance            October 2020
 
 10.1.  Normative References
 
-   [I-D.ietf-lsr-flex-algo]
-              Psenak, P., Hegde, S., Filsfils, C., Talaulikar, K., and
-              A. Gulko, "IGP Flexible Algorithm", draft-ietf-lsr-flex-
-              algo-11 (work in progress), September 2020.
-
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
               DOI 10.17487/RFC2119, March 1997,
               <https://www.rfc-editor.org/info/rfc2119>.
 
-
-
-
-Lindem, et al.           Expires April 15, 2021                 [Page 9]
-
-Internet-Draft           OSPF Transport Instance            October 2020
-
-
    [RFC2328]  Moy, J., "OSPF Version 2", STD 54, RFC 2328,
               DOI 10.17487/RFC2328, April 1998,
               <https://www.rfc-editor.org/info/rfc2328>.
+
+
+
+
+
+
+
+Lindem, et al.             Expires May 6, 2021                  [Page 9]
+
+Internet-Draft           OSPF Transport Instance           November 2020
+
 
    [RFC3630]  Katz, D., Kompella, K., and D. Yeung, "Traffic Engineering
               (TE) Extensions to OSPF Version 2", RFC 3630,
@@ -553,20 +549,18 @@ Internet-Draft           OSPF Transport Instance            October 2020
               <https://www.etsi.org/images/files/ETSIWhitePapers/
               etsi_wp28_mec_in_5G_FINAL.pdf>.
 
-
-
-
-
-Lindem, et al.           Expires April 15, 2021                [Page 10]
-
-Internet-Draft           OSPF Transport Instance            October 2020
-
-
    [I-D.wang-lsr-igp-extensions-ifit]
               Wang, Y., Zhou, T., Qin, F., Chen, H., and R. Pang, "IGP
               Extensions for In-situ Flow Information Telemetry (IFIT)
               Capability Advertisement", draft-wang-lsr-igp-extensions-
               ifit-01 (work in progress), July 2020.
+
+
+
+Lindem, et al.             Expires May 6, 2021                 [Page 10]
+
+Internet-Draft           OSPF Transport Instance           November 2020
+
 
    [RFC5572]  Blanchet, M. and F. Parent, "IPv6 Tunnel Broker with the
               Tunnel Setup Protocol (TSP)", RFC 5572,
@@ -613,4 +607,10 @@ Authors' Addresses
 
 
 
-Lindem, et al.           Expires April 15, 2021                [Page 11]
+
+
+
+
+
+
+Lindem, et al.             Expires May 6, 2021                 [Page 11]
