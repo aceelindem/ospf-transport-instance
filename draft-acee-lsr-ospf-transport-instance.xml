@@ -410,14 +410,33 @@
   |                            Value...                           |
   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
+  Type: TBD
+  Length: Number of octets in the value field
+  Value:
+
+                                       No. of octets
+         +---------------------------+
+         | Flags                     |     1
+         +---------------------------+
+         | Application ID            |     2
+         +---------------------------+
+         | Additional Application-   |     variable length
+         | Specific Information      | 
+         +---------------------------+
+
+  Application ID:
+    An identifier assigned to this application via the IANA registry,
+    same as defined in RFC 6823. Each unique application will have its
+    own unique ID.
+
+  Additional Application-Specific Information:
+    Additional information defined by applications can be encoded as 
+    sub-tlvs. Definition of such information is beyond the scope of 
+    this document.
+
      </artwork>
   </figure></t>
-<t>
-   However, each unique application using the mechanisms defined in this
-   document will have it's own unique ID.  Whether to encode this ID as
-   the top-level TLV or make it part of the OSPF LSA ID is open for
-   debate.
-</t>
+
 <t>
    The specific TLVs and sub-TLVs relating to a given application and
    the corresponding IANA considerations MUST for standard applications
