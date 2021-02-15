@@ -410,6 +410,14 @@
   |                            Value...                           |
   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
+    </artwork>
+  </figure></t>
+
+  <section title="Top-Level Application TLV">
+  <t>An Application ID is used in top-level application TLV and shares
+    the same code point with IS-IS as defined in <xref target="RFC6823"/>.
+  <figure title="Top-Level TLV">
+     <artwork>
   Type: TBD
   Length: Number of octets in the value field
   Value:
@@ -433,16 +441,15 @@
     Additional information defined by applications can be encoded as 
     sub-tlvs. Definition of such information is beyond the scope of 
     this document.
-
      </artwork>
   </figure></t>
 
-<t>
+  <t>
    The specific TLVs and sub-TLVs relating to a given application and
-   the corresponding IANA considerations MUST for standard applications
-   MUST be specified in the document corresponding to that application.
-</t>
-
+   the corresponding IANA considerations MUST be specified in the 
+   document corresponding to that application.
+  </t>
+  </section>
  <section title="OSPFv2 Transport Instance Information Encoding">
  <t>
    Application specific information will be flooded in opaque LSAs as
