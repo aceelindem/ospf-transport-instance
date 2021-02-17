@@ -22,7 +22,7 @@
 <?rfc compact="yes"?>
 <?rfc subcompact="no"?>
 <?rfc strict="yes" ?>
-<rfc category="std" docName="draft-acee-lsr-ospf-transport-instance-00">
+<rfc category="std" docName="draft-acee-lsr-ospf-transport-instance-02">
   <!-- ***** FRONT MATTER ***** -->
   <front>
     <title abbrev="OSPF Transport Instance">OSPF Transport Instance Extensions</title>
@@ -392,13 +392,32 @@
  </section>
 </section>
 
-<section title="OSPF Transport Instance Information Encoding">
+<section title="OSPF Transport Instance Information (TII) Encoding">
+  <section title="OSPFv2 Transport Instance Information Encoding">
+    <t>
+      Application specific information will be flooded in opaque LSAs as
+      specified in <xref target="RFC5250"/>. An Opaque LSA option code will be
+      reserved for Transport Instance Information (TII)  <xref target="IANA"/>.
+    </t>
+  </section>
+  <section title="OSPFv3 Transport Instance Information Encoding">
+    <t>
+      Application specific information will be flooded in separate LSAs
+      with a separate function code. 
+      Refer to section A.4.2.1 of <xref target="RFC5340"/>.
+      for information on the LS Type encoding in OSPFv3, and section 2 of
+      <xref target="RFC8362"/> for OSPFv3 extended LSA types. An OSPFv3 function
+      code will be reserved for Transport Instance
+      Information (TII) <xref target="IANA"/>.
+    </t>
+  </section>
+  <section title="Transport Instance Information (TII) TLV Encoding">
    <t>
-   The format of the TLVs within the body of an LSA containing non-
-   routing information is the same as the format used by the Traffic
-   Engineering Extensions to OSPF <xref target="RFC3630"/>. The LSA payload consists of one
-   or more nested Type/Length/Value (TLV) triplets.  The format of each
-   TLV is:
+   The format of the TLVs within the body of the LSAs
+   containing non-routing information is the same as the format used by the Traffic
+   Engineering Extensions to OSPF <xref target="RFC3630"/>. The LSA payload
+   consists of one or more nested Type/Length/Value (TLV) triplets.
+   The format of each TLV is:
    <figure title="TLV Format">
      <artwork>
 
@@ -412,34 +431,39 @@
 
     </artwork>
   </figure></t>
+  </section>
 
-  <section title="Top-Level Application TLV">
-  <t>An Application ID is used in top-level application TLV and shares
-    the same code point with IS-IS as defined in <xref target="RFC6823"/>.
+  <section anchor="TIIA-TLV" title="Top-Level TII Application TLV">
+  <t>An Application top-level TLV will be used to encapsulate application
+     data advertised within TII LSAs.   
+     This top-level TLV may be used to handle the local publication/subscription
+     for application specific data. The details of such a publication/subscription
+     mechanism are beyond the scope of this document.
+     An Application ID is used in the top-level application TLV and shares
+     the same code point with IS-IS as defined in <xref target="RFC6823"/>.
   <figure title="Top-Level TLV">
      <artwork>
-  Type: TBD
-  Length: Number of octets in the value field
-  Value:
+   0                   1                   2                   3
+   0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+  |              Type (1)         |      Length - Variable        |
+  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+  |    Application ID             |       Reserved                |
+  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+  .                                                               .
+  .                            Sub-TLVs                           .
+  .                                                               .
+  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
-                                       No. of octets
-         +---------------------------+
-         | Flags                     |     1
-         +---------------------------+
-         | Application ID            |     2
-         +---------------------------+
-         | Additional Application-   |     variable length
-         | Specific Information      | 
-         +---------------------------+
 
   Application ID:
     An identifier assigned to this application via the IANA registry,
-    same as defined in RFC 6823. Each unique application will have its
-    own unique ID.
+    as defined in RFC 6823. Each unique application will have a
+    unique ID.
 
-  Additional Application-Specific Information:
+  Additional Application-Specific Sub-TLVs:
     Additional information defined by applications can be encoded as 
-    sub-tlvs. Definition of such information is beyond the scope of 
+    Sub-TLVs. Definition of such information is beyond the scope of 
     this document.
      </artwork>
   </figure></t>
@@ -450,20 +474,6 @@
    document corresponding to that application.
   </t>
   </section>
- <section title="OSPFv2 Transport Instance Information Encoding">
- <t>
-   Application specific information will be flooded in opaque LSAs as
-   specified in <xref target="RFC5250"/>.
-</t>
-</section>
-<section title="OSPFv3 Transport Instance Information Encoding">
- <t>
-   Application specific information will be flooded in separate LSAs
-   with separate function codes.  Refer to section A.4.2.1 of <xref target="RFC5340"/>.
-   for information on the LS Type encoding in OSPFv3, and section 2 of
-   <xref target="RFC8362"/> for OSPFv3 extended LSA types.
-</t>
-</section>
 </section>
   <section title="Manageability Considerations">
   </section>
@@ -474,10 +484,45 @@
    OSPFv3 <xref target="RFC5340"/>.
     </t>
    </section>
-   <section title="IANA Considerations">
+   <section anchor="IANA" title="IANA Considerations">
+   <section title="OSPFv2 Opaque LSA Type Assignment">
      <t>
-       No IANA actions are required.
+       IANA is requested to assign a type for Transport Instance Information (TII)
+       from the "Opaque Link-State Advertisements (LSA) Option Types" registry.
      </t>
+    </section>
+   <section title="OSPFv3 LSA Function Code Assignment">
+     <t>
+       IANA is requested to assign a function code for Transport Instance Information (TII)
+       from the "OSPFv3 LSA Function Codes" registry.
+     </t>
+    </section>
+   <section title="OSPF Transport Instance Information Top-Level TLV Registry">
+     <t>
+       IANA is requested to create a registry for OSPF Transport Instance Information (TII)
+       Top-Level TLVs. The first available TLV (1) is assigned to the
+       Application TLV <xref target="TIIA-TLV"/>. The allocation of the unsigned 16-bit
+       TLV type are defined in the table below.
+        <figure title="TII Top-Level TLV Registry Assignments">
+      <artwork>
+          +-------------+-----------------------------------+
+          | Range       | Assignment Policy                 |
+          +-------------+-----------------------------------+
+          | 0           | Reserved (Not to be assigned)     |
+          |             |                                   |
+          | 1           | Application TLV                   |
+          |             |                                   |
+          | 2-16383     | Unassigned (IETF Review)          |
+          |             |                                   |
+          | 16383-32767 | Unassigned (FCFS)                 |
+          |             |                                   |
+          | 32768-32777 | Experimentation (No assignements) |
+          |             |                                   |
+          | 32778-65535 | Reserved (Not to be assigned)     |
+          +-----------+-------------------------------------+
+</artwork>
+     </figure></t>
+    </section>
   </section>
 
  <section title="Acknowledgement">
