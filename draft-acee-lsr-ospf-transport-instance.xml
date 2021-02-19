@@ -400,7 +400,31 @@
       reserved for Transport Instance Information (TII) as described
       in <xref target="IANA"/>. The TII LSA can be advertised at any of
       the defined flooding scopes (link, area, or autonomous system (AS)).
-    </t>
+   <figure title="OSPFv2 Transport Instance Information Opaque LSA">
+     <artwork>
+   0                   1                   2                   3
+   0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+  |            LS age             |     Options   |  9, 10, or 11 |
+  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+  |       TBD1    |     Opaque ID (Instance ID)                   |
+  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+  |                     Advertising Router                        |
+  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+  |                     LS sequence number                        |
+  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+  |         LS checksum           |             length            |
+  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+  |                                                               |
+  +-                            TLVs                             -+
+  |                             ...                               |
+
+g    </artwork>
+  </figure></t>
+   <t> 
+   The format of the TLVs within the body of an TII LSA is as defined in
+   <xref target="TTI-TLVS"/>.
+   </t>
   </section>
   <section title="OSPFv3 Transport Instance Information Encoding">
     <t>
@@ -412,10 +436,36 @@
       code will be reserved for Transport Instance
       Information (TII) as described in <xref target="IANA"/>. Same as
       OSPFv2, the TII LSA can be advertised at any of the defined flooding scopes 
-      (link, area, or autonomous system (AS)).
+      (link, area, or autonomous system (AS)).  The U bit will be set indicating
+      that OSPFv3 TTI LSAs should be flooded even if it is not understood. 
+    <figure title="OSPFv3 Transport Instance Information LSA">
+     <artwork>
+   0                   1                   2                   3
+   0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+  |            LS age             |1|S12|          TBD2           |
+  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+  |                       Link State ID (Instance ID)             |
+  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+  |                       Advertising Router                      |
+  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+  |                       LS sequence number                      |
+  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+  |        LS checksum            |            Length             |
+  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+  |                                                               |
+  +-                            TLVs                             -+
+  |                             ...                               |
+
+  </artwork>
+  </figure>
     </t>
+   <t> 
+   The format of the TLVs within the body of an TII LSA is as defined in
+   <xref target="TTI-TLVS"/>.
+   </t>
   </section>
-  <section title="Transport Instance Information (TII) TLV Encoding">
+  <section anchor="TTI-TLVS" title="Transport Instance Information (TII) TLV Encoding">
    <t>
    The format of the TLVs within the body of the LSAs
    containing non-routing information is the same as the format used by the Traffic
@@ -435,7 +485,6 @@
 
     </artwork>
   </figure></t>
-  </section>
 
   <section anchor="TIIA-TLV" title="Top-Level TII Application TLV">
   <t>An Application top-level TLV will be used to encapsulate application
@@ -478,6 +527,7 @@
    document corresponding to that application.
   </t>
   </section>
+  </section>
 </section>
   <section title="Manageability Considerations">
   </section>
@@ -491,14 +541,14 @@
    <section anchor="IANA" title="IANA Considerations">
    <section title="OSPFv2 Opaque LSA Type Assignment">
      <t>
-       IANA is requested to assign a type for Transport Instance Information (TII)
-       from the "Opaque Link-State Advertisements (LSA) Option Types" registry.
+       IANA is requested to assign an option type, TBD1, for Transport Instance Information (TII)
+       LSA from the "Opaque Link-State Advertisements (LSA) Option Types" registry.
      </t>
     </section>
    <section title="OSPFv3 LSA Function Code Assignment">
      <t>
-       IANA is requested to assign a function code for Transport Instance Information (TII)
-       from the "OSPFv3 LSA Function Codes" registry.
+       IANA is requested to assign a function code, TBD2, for Transport Instance Information (TII)
+       LSAs from the "OSPFv3 LSA Function Codes" registry.
      </t>
     </section>
    <section title="OSPF Transport Instance Information Top-Level TLV Registry">
@@ -531,6 +581,7 @@
 
  <section title="Acknowledgement">
     <t>
+  The authors would like to thank Les Ginsberg for review and comments. 
     </t>
  </section>
 
