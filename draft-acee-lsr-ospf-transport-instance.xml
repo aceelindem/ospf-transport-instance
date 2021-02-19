@@ -397,7 +397,9 @@
     <t>
       Application specific information will be flooded in opaque LSAs as
       specified in <xref target="RFC5250"/>. An Opaque LSA option code will be
-      reserved for Transport Instance Information (TII)  <xref target="IANA"/>.
+      reserved for Transport Instance Information (TII) as described
+      in <xref target="IANA"/>. The TII LSA can be advertised at any of
+      the defined flooding scopes (link, area, or autonomous system (AS)).
     </t>
   </section>
   <section title="OSPFv3 Transport Instance Information Encoding">
@@ -408,7 +410,9 @@
       for information on the LS Type encoding in OSPFv3, and section 2 of
       <xref target="RFC8362"/> for OSPFv3 extended LSA types. An OSPFv3 function
       code will be reserved for Transport Instance
-      Information (TII) <xref target="IANA"/>.
+      Information (TII) as described in <xref target="IANA"/>. Same as
+      OSPFv2, the TII LSA can be advertised at any of the defined flooding scopes 
+      (link, area, or autonomous system (AS)).
     </t>
   </section>
   <section title="Transport Instance Information (TII) TLV Encoding">
