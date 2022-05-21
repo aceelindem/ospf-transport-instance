@@ -22,7 +22,7 @@
 <?rfc compact="yes"?>
 <?rfc subcompact="no"?>
 <?rfc strict="yes" ?>
-<rfc category="std" docName="draft-ietf-lsr-ospf-transport-instance-01">
+<rfc category="std" ipr="trust200902" docName="draft-ietf-lsr-ospf-transport-instance-02">
   <!-- ***** FRONT MATTER ***** -->
   <front>
     <title abbrev="OSPF Transport Instance">OSPF Transport Instance Extensions</title>
@@ -348,7 +348,7 @@
    desired topologies on the interfaces with routers requiring the non-
    routing information.  When the routers making up the sparse topology
    are not part of a uniconnected graph, two alternatives exist.  The
-   first alternative is configure tunnels to form a fully connected
+   first alternative is configuring tunnels to form a fully connected
    graph including only those routers in the sparse topology.  The
    second alternative is use remote neighbors as described in
    <xref target="remote-neighbor"/>.
@@ -364,7 +364,8 @@
    include:
     <list style="symbols">
     <t>All OSPF packets have the remote neighbor's configured IP address
-       as the IP destination address.</t>
+       as the IP destination address. This address has be to reachable
+       usig the unicast topology.</t>
 
     <t>The adjacency is represented in the router Router-LSA as a router
        (type-1) link with the link data set to the remote neighbor's
