@@ -119,6 +119,11 @@
         routers requiring it. 
       </t>
       <t>
+        OSPF-GT is independent of any traditional OSPF instance. However,
+        it does rely on the reachbility calculated by routing protocls,
+        e.g. OSPF and IS-IS.
+      </t>
+      <t>
 	This OSPF protocol extension provides functionality similar to
 	"Advertising Generic Information in IS-IS" <xref target="RFC6823" format="default"/>.
 	Additionally, OSPF is extended to support sparse non-routing overlay
@@ -389,19 +394,19 @@
           <xref target="remote-neighbor" format="default"/>.
         </t>
         <section anchor="remote-neighbor" numbered="true" toc="default">
-          <name>Remote OSPF Neighbor</name>
+          <name>Remote Neighbor</name>
           <t>
-            With sparse topologies, OSPF routers sharing non-routing information
-            may not be directly connected.  OSPF adjacencies with remote
+            With sparse topologies, OSPF-GT routers sharing non-routing information
+            may not be directly connected.  OSPF-GT adjacencies with remote
             neighbors are formed exactly as they are with regular OSPF neighbors.
-            The main difference is that a remote OSPF neighbor's address is
-            configured and IP routing is used to deliver OSPF protocol packets to
+            The main difference is that a remote OSPF-GT neighbor's address is
+            configured and IP routing is used to deliver OSPF-GT protocol packets to
             the remote neighbor.  Other salient feature of the remote neighbor
             include:
           </t>
           <ul spacing="normal">
             <li>
-              All OSPF packets have the remote neighbor's configured IP address
+              All OSPF-GT packets have the remote neighbor's configured IP address
               as the IP destination address. This address has be to reachable
               using the unicast topology.
             </li>
