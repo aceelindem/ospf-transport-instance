@@ -13,14 +13,14 @@
 <?rfc compact="yes"?>
 <?rfc subcompact="no"?>
 <?rfc strict="yes" ?>
-<rfc xmlns:xi="http://www.w3.org/2001/XInclude" category="std" ipr="trust200902" docName="draft-ietf-lsr-ospf-transport-instance-02"
+<rfc xmlns:xi="http://www.w3.org/2001/XInclude" category="std" ipr="trust200902" docName="draft-ietf-lsr-ospf-transport-instance-03"
      obsoletes="" updates="" submissionType="IETF" xml:lang="en" tocInclude="true" tocDepth="6" symRefs="true"
      sortRefs="true" consensus="true" version="3">
   <!-- xml2rfc v2v3 conversion 3.12.3 -->
   <!-- ***** FRONT MATTER ***** -->
   <front>
-    <title abbrev="OSPF Transport Instance">OSPF Transport Instance Extensions</title>
-    <seriesInfo name="Internet-Draft" value="draft-ietf-lsr-ospf-transport-instance-02"/>
+    <title abbrev="OSPF-GT">OSPF-GT (Generalized Transport)</title>
+    <seriesInfo name="Internet-Draft" value="draft-ietf-lsr-ospf-transport-instance-03"/>
     <author initials="A" surname="Lindem" fullname="Acee Lindem">
       <organization>Cisco Systems</organization>
       <address>
@@ -72,17 +72,23 @@
     <workgroup>LSR Workgroup</workgroup>
     <abstract>
       <t>
-   OSPFv2 and OSPFv3 include a reliable flooding mechanism to
-   disseminate routing topology and Traffic Engineering (TE) information
-   within a routing domain.  Given the effectiveness of these
-   mechanisms, it is convenient to envision using the same mechanism for
-   dissemination of other types of information within the domain.
-   However, burdening OSPF with this additional information will impact
-   intra-domain routing convergence and possibly jeopardize the
-   stability of the OSPF routing domain.  This document presents
-   mechanism to relegate this ancillary information to a separate OSPF
-   instance and minimize the impact.
-
+        OSPFv2 and OSPFv3 include a reliable flooding mechanism to
+        disseminate routing topology and Traffic Engineering (TE) information
+        within a routing domain.  Given the effectiveness of these
+        mechanisms, it is advantageous to use the same mechanism for
+        dissemination of other types of information within the domain.
+        However, burdening OSPF with this additional information will impact
+        intra-domain routing convergence and possibly jeopardize the
+        stability of the OSPF routing domain. This document presents mechanisms
+        to advertise this non-routing information in separate
+        OSPF Generalized Transport (OSPF-GT) instances.
+      </t>
+      <t>
+        OSPF-GT is not constrained to the semantics as traditional OSPF. OSPF-GT
+        neighbors are not required to be directly attached since they are never
+        used to compute hop-by-hop routing. Consequently, independent sparse topologies
+        can be defined to dissemenate non-routing information only to those OSPF-GT
+        routers requiring it. 
       </t>
     </abstract>
   </front>
@@ -92,67 +98,87 @@
     <section numbered="true" toc="default">
       <name>Introduction</name>
       <t>
-	  OSPFv2 <xref target="RFC2328" format="default"/>  and OSPFv3 <xref target="RFC5340" format="default"/>
-	  include a reliable flooding
-	  mechanism to disseminate routing topology and Traffic Engineering
-	  (TE) information within a routing domain.  Given the effectiveness of
-	  these mechanisms, it is convenient to envision using the same
-	  mechanism for dissemination of other types of information within the
-	  domain.  However, burdening OSPF with this additional information
-	  will impact intra-domain routing convergence and possibly jeopardize
-	  the stability of the OSPF routing domain.  This document presents
-	  mechanism to relegate this ancillary information to a separate OSPF
-	  instance and minimize the impact.
+	OSPFv2 <xref target="RFC2328" format="default"/>  and
+        OSPFv3 <xref target="RFC5340" format="default"/>
+	include a reliable flooding mechanism to disseminate routing topology
+        and Traffic Engineering
+	(TE) information within a routing domain.  Given the effectiveness of
+        mechanisms, it is advantageous to use the same mechanism for
+        dissemination of other types of information within the domain.
+        However, burdening OSPF with this additional information will impact
+        intra-domain routing convergence and possibly jeopardize the
+        stability of the OSPF routing domain. This document presents mechanisms
+        to advertise this non-routing information in separate
+        OSPF Generalized Transport (OSPF-GT) instances.
       </t>
       <t>
-	  This OSPF protocol extension provides functionality similar to
-	  "Advertising Generic Information in IS-IS" <xref target="RFC6823" format="default"/>.
-	  Additionally, OSPF is extended to support sparse non-routing overlay
-	  topologies <xref target="sparse" format="default"/>.
+        OSPF-GT is not constrained to the semantics as traditional OSPF. OSPF-GT
+        neighbors are not required to be directly attached since they are never
+        used to compute hop-by-hop routing. Consequently, independent sparse topologies
+        can be defined to dissemenate non-routing information only to those OSPF-GT
+        routers requiring it. 
+      </t>
+      <t>
+	This OSPF protocol extension provides functionality similar to
+	"Advertising Generic Information in IS-IS" <xref target="RFC6823" format="default"/>.
+	Additionally, OSPF is extended to support sparse non-routing overlay
+	topologies <xref target="sparse" format="default"/>.
       </t>
     </section>
     <section numbered="true" toc="default">
       <name>Requirements Language</name>
-      <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL
+      <t>
+        The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL
         NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED",
         "MAY", and "OPTIONAL" in this document are to be interpreted as
-        described in BCP 14 <xref target="RFC2119" format="default"/> <xref target="RFC8174" format="default"/>
-        when, and only when, they appear in all capitals, as shown here.</t>
+        described in BCP 14 <xref target="RFC2119" format="default"/>
+        <xref target="RFC8174" format="default"/>
+        when, and only when, they appear in all capitals, as shown here.
+      </t>
     </section>
     <section numbered="true" toc="default">
       <name>Possible Use Cases</name>
       <section numbered="true" toc="default">
         <name>MEC Service Discovery</name>
-        <t>Multi-Access Edge Computing (MEC) plays an important role in
+        <t>
+          Multi-Access Edge Computing (MEC) plays an important role in
           5G architecture. MEC optimizes the performance for ultra-low
           latency and high bandwidth services by providing networking
-          and computing at the edge of the network <xref target="ETSI-WP28-MEC" format="default"/>.
+          and computing at the edge of the network <xref target="ETSI-WP28-MEC"/>.
           To achieve this goal, it's important to expose the network
-          capabilities and services of a MEC device to 5G User Equipment UE, i.e. UEs.</t>
-        <t>The followings are an incomplete list of the kind of
-          information that OSPF transport instance can help to
-          disseminate:
+          capabilities and services of a MEC device to 5G User Equipment (UE),
+          i.e., UEs.
+        </t>
+        <t>
+          The followings are an incomplete list of the kind of
+          information that OSPF-GT can be used to advertise:
         </t>
         <ul spacing="normal">
-          <li>A network service is realized using one or more physical or
+          <li>
+            A network service is realized using one or more physical or
             virtualized hosts in MEC, and the locations of these service
             points might change. The auto-discovery of these service
-            locations can be achieved using an OSPF transport instance.</li>
-          <li>UEs might be mobile, and MEC should support service
+            locations can be achieved using an OSPF-GT.
+          </li>
+          <li>
+            UEs might be mobile, and MEC should support service
             continuity and application mobility. This may require service
-            state transferring and synchronization. OSPF transport
-            instance can be used to synchronize these states.</li>
+            state transferring and synchronization. OSPF-GT
+            can be used to synchronize these states.
+          </li>
           <li>Network resources are limited, such as computing power,
             storage. The availability of such resources is dynamic, and
-            OSPF transport instance can be used to populate such
-            information, so applications can pick the right location of
+            OSPF-GT can be used to populate such information, so
+            applications can pick the right location of
             such resources, hence improve user experience and resource
-            utilization.</li>
+            utilization.
+          </li>
         </ul>
       </section>
       <section numbered="true" toc="default">
         <name>Application Data Dissemination</name>
-        <t>Typically a network consists of routers from different
+        <t>
+          Typically a network consists of routers from different
           vendors with different capabilities, and some applications may
           want to know whether a router supports certain functionality
           or where to find a router supports a functionality, so it will
@@ -160,108 +186,122 @@
           or a group of routers in the network. For example, an ingress
           router needs to find an egress router that supports In-situ
           Flow Information Telemetry (IFIT)
-          <xref target="I-D.wang-lsr-igp-extensions-ifit" format="default"/> and obtain
-	  IFIT parameters.</t>
-        <t>OSPF transport instance can be used to populate such router
+          <xref target="I-D.wang-lsr-igp-extensions-ifit"/> and obtain
+	  IFIT parameters.
+        </t>
+        <t>
+          OSPF-GT can be used to populate such router
           capabilities/functionalities without impacting the performance
-          or convergence of the base OSPF protocol.</t>
+          or convergence of the base OSPF protocol.
+        </t>
       </section>
       <section numbered="true" toc="default">
         <name>Intra-Area Topology for BGP-LS Distribution</name>
-        <t>In some cases, it is desirable to limit the number of
-	BGP-LS  <xref target="RFC5572" format="default"/> sessions
-	with a controller to the a one or two routers in an OSPF domain.
-	However, many times those router(s) do not have full visibility to the
-	complete topology of all the areas. To solve this problem without extended
-	the BGP-LS domain, the OSPF LSAs for non-local area could be flooded
-	over the OSPF transport instance topology using
-	remote neighbors <xref target="remote-neighbor" format="default"/>.</t>
+        <t>
+          In some cases, it is desirable to limit the number of
+	  BGP-LS  <xref target="RFC5572" format="default"/> sessions
+	  with a controller to the a one or two routers in an OSPF domain.
+	  However, many times those router(s) do not have full visibility to the
+	  complete topology of all the areas. To solve this problem without
+          extending the BGP-LS domain, the OSPF LSAs for non-local area could
+          be flooded over the OSPF-GT topology using
+	  remote neighbors <xref target="remote-neighbor" format="default"/>.
+        </t>
       </section>
     </section>
     <section numbered="true" toc="default">
-      <name>OSPF Transport Instance</name>
+      <name>OSPF-GT Instance</name>
       <t>
-   In order to isolate the effects of flooding and processing of non-
-   routing information, it will be relegated to a separate protocol
-   instance.  This instance should be given lower priority when
-   contending for router resources including processing, backplane
-   bandwidth, and line card bandwidth.  How that is realized is an
-   implementation issue and is outside the scope of this document.
+        In order to isolate the effects of flooding and processing of
+        non-routing information, OSPF-GT will be relegated to protocol
+        instances sepearate from the traditional OSPF routing instances.
+        These instance(s) should be given lower priority when
+        contending for router resources including processing, backplane
+        bandwidth, and line card bandwidth.  How that is realized is an
+        implementation issue and is beyond the scope of this document.
       </t>
       <t>
-   Throughout the document, non-routing refers to routing information
-   that is not used for IP or IPv6 routing calculations.  The OSPF
-   transport instance is ideally suited for dissemination of routing
-   information for other protocols and layers.
+        Throughout the document, non-routing refers to routing information
+        that is not used for IP or IPv6 routing calculations.  The OSPF-GT
+        instances area ideally suited for generalized dissemination of
+        other types of networking and applicaiton information for other
+        protocols and layers.
       </t>
       <section numbered="true" toc="default">
-        <name>OSPFv2 Transport Instance Packet Differentiation</name>
+        <name>OSPFv2 Generalized Transport Packet Differentiation</name>
         <t>
-   OSPFv2 currently does not offer a mechanism to differentiate Transport
-   instance packets from normal instance packets sent and received on
-   the same interface.  However, the <xref target="RFC6549" format="default"/> provides the
-   necessary packet encoding to support multiple OSPF protocol instances.
+          OSPFv2 currently does not offer a mechanism to differentiate OSPF packets
+          from multiple OSPF instances (including OSPF-GT instances) sent and received on
+          the same interface.  However, the <xref target="RFC6549" format="default"/>
+          provides the necessary packet encoding to support multiple OSPF
+          protocol instances.
         </t>
       </section>
       <section numbered="true" toc="default">
-        <name>OSPFv3 Transport Instance Packet Differentiation</name>
+        <name>OSPFv3 Generalized Transport Packet Differentiation</name>
         <t>
-   Fortunately, OSPFv3 already supports separate instances within the
-   packet encodings.  The existing OSPFv3 packet header instance ID
-   field will be used to differentiate packets received on the same link
-   (refer to section 2.4 in <xref target="RFC5340" format="default"/>).
+          Fortunately, OSPFv3 already supports separate instances within the
+          packet encodings.  The existing OSPFv3 packet header instance ID
+          field will be used to differentiate packets received on the same link
+          (refer to section 2.4 in <xref target="RFC5340" format="default"/>).
         </t>
       </section>
       <section numbered="true" toc="default">
-        <name>Instance Relationship to Normal OSPF Instances</name>
-        <t>In OSPF transport instance, we must guarantee that any information
-    we've received is treated as valid if and only if the router
-    sending it is reachable.  We'll refer to this as the "condition of
-    reachability" in this document.</t>
-        <t>The OSPF transport instance is not dependent on any
-    other OSPF instance.  It does, however, have much of the same as
-    topology information must be advertised to satisfy the "condition of
-    reachability".</t>
-        <t>Further optimizations and coupling between an OSPF transport instance
-    and a normal OSPF instance are beyond the scope of this document.
-    This is an area for future study.</t>
+        <name>OSPF-GT Relationship to Traditional OSPF</name>
+        <t>
+          In OSPF, we must guarantee that any information
+          we've received is treated as valid if and only if the router
+          sending it is reachable.  We'll refer to this as the "condition of
+          reachability" in this document.
+        </t>
+        <t>
+          OSPF-GT is not dependent on any other OSPF instance.
+          It does, however, have much of the same as
+          topology information must be advertised to satisfy the "condition of
+          reachability".
+        </t>
+        <t>
+          Further optimizations and coupling between OSPF-GT
+          and a traditional OSPF instance are beyond the scope of this document.
+          This is an area for future study.
+        </t>
       </section>
       <section numbered="true" toc="default">
         <name>Network Prioritization</name>
         <t>
-   While OSPFv2 (section 4.3 in <xref target="RFC2328" format="default"/>) are normally sent with IP
-   precedence Internetwork Control, any packets sent by an OSPF
-   transport instance will be sent with IP precedence Flash (B'011').
-   This is only appropriate given that this is a pretty flashy
-   mechanism.
+          While OSPFv2 (section 4.3 in <xref target="RFC2328" format="default"/>) are normally sent with IP
+          precedence Internetwork Control, any packets sent using OSPF-GT
+          transport instance will be sent with IP precedence Flash (B'011').
+          This is only appropriate given that this is a pretty flashy
+          mechanism.
         </t>
         <t>
-   Similarly, OSPFv3 transport instance packets will be sent with the
-   traffic class mapped to flash (B'011') as specified in (<xref target="RFC5340" format="default"/>).
+          Similarly, OSPFv3 GT  instance packets will be sent with the
+          traffic class mapped to flash (B'011') as specified in (<xref target="RFC5340"/>).
         </t>
         <t>
-   By setting the IP/IPv6 precedence differently for OSPF transport
-   instance packets, normal OSPF routing instances can be given priority
-   during both packet transmission and reception.  In fact, some router
-   implementations map the IP precedence directly to their internal
-   packet priority.  However, internal router implementation decisions
-   are beyond the scope of this document.
+          By setting the IP/IPv6 precedence differently for OSPF-GT
+          instance packets, traditional OSPF routing instances can be given
+          priority during both packet transmission and reception.  In fact, some router
+          implementations map the IP precedence directly to their internal
+          packet priority.  However, internal router implementation decisions
+          are beyond the scope of this document.
         </t>
       </section>
       <section anchor="routing-omission" numbered="true" toc="default">
-        <name>OSPF Transport Instance Omission of Routing Calculation</name>
+        <name>OSPF-GT Omission of Routing Calculation</name>
         <t>
-   Since the whole point of the transport instance is to separate the
-   routing and non-routing processing and fate sharing, a transport
-   instance SHOULD NOT install any IP or IPv6 routes.  OSPF routers
-   SHOULD NOT advertise any transport instance LSAs containing IP or
-   IPv6 prefixes and OSPF routers receiving LSAs advertising IP or IPv6
-   prefixes SHOULD ignore them.  This implies that an OSPF transport
-   instance Link State Database should not include any of the LSAs as
-   shown in Table 1.
+          Since one of the primary advantages of the OSPF-GT is to separate the
+          routing and non-routing processing and fate sharing, a OSPF-GT
+          instance SHOULD NOT install any IP or IPv6 routes.  OSPF routers
+          SHOULD NOT advertise any OSPF-GT LSAs containing IP or
+          IPv6 prefixes and OSPF routers receiving LSAs advertising IP or IPv6
+          prefixes SHOULD ignore them.  This implies that an OSPF-GT
+          instance Link State Database should not include any of the LSAs as
+          shown in Table 1.
         </t>
-        <figure>
-          <name>LSAs not included in OSPF transport instance</name>
+                <figure>
+          <name>LSAs not included in OSPF-GT</name>
           <artwork name="" type="" align="left" alt=""><![CDATA[
 
   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -279,119 +319,137 @@
   |                     |  E-Type-7-NSSA (type 0xA027)            |
   |                     |  E-intra-area-prefix-LSA (type 0xA029)  |
   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-     ]]></artwork>
+  ]]></artwork>
         </figure>
-        <t>If these LSAs are erroneously advertised, they will be flooded
-    as per standard OSPF but MUST be ignored by OSPF routers supporting
-    this specification.
+        <t>
+          If these LSAs are erroneously advertised, they will be flooded
+          as per standard OSPF but MUST be ignored by OSPF routers supporting
+          this specification.
         </t>
       </section>
       <section numbered="true" toc="default">
-        <name>Non-routing Instance Separation</name>
+       <name>Non-routing Instance Separation</name>
         <t>
-   It has been suggested that an implementation could obtain the same
-   level of separation between IP routing information and non-routing
-   information in a single instance with slight modifications to the
-   OSPF protocol.  The authors refute this contention for the following
-   reasons:
+          It has been suggested that an implementation could obtain the same
+          level of separation between IP routing information and non-routing
+          information in a single instance with slight modifications to the
+          OSPF protocol.  The authors refute this contention for the following
+          reasons:
         </t>
         <ul spacing="normal">
-          <li>Adding internal and external mechanisms to prioritize routing
-       information over non-routing information are much more complex
-       than simply relegating the non-routing information to a separate
-       instance as proposed in this specification.</li>
-          <li>The instance boundary offers much better separation for allocation
-       of finite resources such as buffers, memory, processor cores,
-       sockets, and bandwidth.</li>
-          <li>The instance boundary decreases the level of fate sharing for
-       failures.  Each instance may be implemented as a separate process
-       or task.</li>
-          <li>With non-routing information, many times not every router in the
-        OSPF routing domain requires knowledge of every piece of non-
-        routing information.  In these cases, groups of routers which need
-        to share information can be segregated into sparse topologies
-        greatly reducing the amount of non-routing information any single
-        router needs to maintain.</li>
+          <li>
+            Adding internal and external mechanisms to prioritize routing
+            information over non-routing information are much more complex
+            than simply relegating the non-routing information to a separate
+            instance as proposed in this specification.
+          </li>
+          <li>
+            The instance boundary offers much better separation for allocation
+            of finite resources such as buffers, memory, processor cores,
+            sockets, and bandwidth.
+          </li>
+          <li>
+            The instance boundary decreases the level of fate sharing for
+            failures.  Each instance may be implemented as a separate process
+            or task.
+          </li>
+          <li>
+            With non-routing information, many times not every router in the
+            OSPF routing domain requires knowledge of every piece of
+            non-routing information.  In these cases, groups of routers which need
+            to share information can be segregated into sparse topologies
+            greatly reducing the amount of non-routing information any single
+            router needs to maintain.
+        </li>
         </ul>
       </section>
       <section anchor="sparse" numbered="true" toc="default">
         <name>Non-Routing Sparse Topologies</name>
         <t>
-   With non-routing information, many times not every router in the OSPF
-   routing domain requires knowledge of every piece of non-routing
-   information.  In these cases, groups of routers which need to share
-   information can be segregated into sparse topologies.  This will
-   greatly reduce the amount of information any single router needs to
-   maintain with the core routers possibly not requiring any non-routing
-   information at all.
+          With non-routing information, many times not every router in the OSPF
+          routing domain requires knowledge of every piece of non-routing
+          information.  In these cases, groups of routers which need to share
+          information can be segregated into sparse topologies.  This will
+          greatly reduce the amount of information any single router needs to
+          maintain with the core routers possibly not requiring any non-routing
+          information at all.
         </t>
         <t>
-   With normal OSPF, every router in an OSPF area must have every piece
-   of topological information and every intra-area IP or IPv6 prefix.
-   With non-routing information, only the routers needing to share a set
-   of information need be part of the corresponding sparse topology.
-   For directly attached routers, one only needs to configure the
-   desired topologies on the interfaces with routers requiring the non-
-   routing information.  When the routers making up the sparse topology
-   are not part of a uniconnected graph, two alternatives exist.  The
-   first alternative is configuring tunnels to form a fully connected
-   graph including only those routers in the sparse topology.  The
-   second alternative is use remote neighbors as described in
-   <xref target="remote-neighbor" format="default"/>.
+          With traditional OSPF, every router in an OSPF area must have every piece
+          of topological information and every intra-area IP or IPv6 prefix.
+          With non-routing information, only the routers needing to share a set
+          of information need be part of the corresponding sparse topology.
+          For directly attached routers, one only needs to configure the
+          desired topologies on the interfaces with routers requiring the
+          non-routing information.  When the routers making up the sparse
+          topology are not part of a uniconnected graph, two alternatives exist.
+          The first alternative is configuring tunnels to form a fully connected
+          graph including only those routers in the sparse topology.  The
+          second alternative is use remote neighbors as described in
+          <xref target="remote-neighbor" format="default"/>.
         </t>
         <section anchor="remote-neighbor" numbered="true" toc="default">
           <name>Remote OSPF Neighbor</name>
           <t>
-   With sparse topologies, OSPF routers sharing non-routing information
-   may not be directly connected.  OSPF adjacencies with remote
-   neighbors are formed exactly as they are with regular OSPF neighbors.
-   The main difference is that a remote OSPF neighbor's address is
-   configured and IP routing is used to deliver OSPF protocol packets to
-   the remote neighbor.  Other salient feature of the remote neighbor
-   include:
+            With sparse topologies, OSPF routers sharing non-routing information
+            may not be directly connected.  OSPF adjacencies with remote
+            neighbors are formed exactly as they are with regular OSPF neighbors.
+            The main difference is that a remote OSPF neighbor's address is
+            configured and IP routing is used to deliver OSPF protocol packets to
+            the remote neighbor.  Other salient feature of the remote neighbor
+            include:
           </t>
           <ul spacing="normal">
-            <li>All OSPF packets have the remote neighbor's configured IP address
-       as the IP destination address. This address has be to reachable
-       usig the unicast topology.</li>
-            <li>The adjacency is represented in the router Router-LSA as a router
-       (type-1) link with the link data set to the remote neighbor's
-       configured IP address.</li>
-            <li>Similar to NBMA networks, a poll-interval is configured to
-       determine if the remote neighbor is reachable.  This value is
-       normally much higher than the hello interval with 40 seconds
-       RECOMMENDED as the default.</li>
+            <li>
+              All OSPF packets have the remote neighbor's configured IP address
+              as the IP destination address. This address has be to reachable
+              using the unicast topology.
+            </li>
+            <li>
+              The adjacency is represented in the router Router-LSA as a router
+              (type-1) link with the link data set to the remote neighbor's
+              configured IP address.
+            </li>
+            <li>
+              Similar to NBMA networks, a poll-interval is configured to
+              determine if the remote neighbor is reachable.  This value is
+              normally much higher than the hello interval with 40 seconds
+              RECOMMENDED as the default.
+            </li>
           </ul>
         </section>
       </section>
       <section anchor="mtr" numbered="true" toc="default">
         <name>Multiple Topologies</name>
-        <t>For some applications, the information need to be flooded only to
-    a topology which is a subset of routers of the transport instance.
-    This allows the application specific information only to be flooded
-    to routers that support the application. A transport instance
-    may support multiple topologies as defined in <xref target="RFC4915" format="default"/>. 
-    But as pointed out in <xref target="routing-omission" format="default"/>, a transport 
-    instance or topology
-    SHOULD NOT install any IP or IPv6 routes.</t>
-        <t>Each topology associated with the transport instance MUST be
-    fully connected in order for the LSAs to be successfully flooded
-    to all routers in the topology.</t>
+        <t>
+          For some applications, the information need to be flooded only to
+          a topology which is a subset of routers of the OSPF-GT instance.
+          This allows the application specific information only to be flooded
+          to routers that support the application. An OSPF-GT instance
+          may support multiple topologies as defined in <xref target="RFC4915"/>.
+          But as pointed out in <xref target="routing-omission" format="default"/>,
+          an OSPF-GT instance or topology SHOULD NOT install any IP or IPv6 routes.
+        </t>
+        <t>
+          Each topology associated with the OSPF-GT instance MUST be
+          fully connected in order for the LSAs to be successfully flooded
+          to all routers in the topology.
+         </t>
       </section>
     </section>
     <section numbered="true" toc="default">
-      <name>OSPF Transport Instance Information (TII) Encoding</name>
+      <name>OSPF Generialized Transport Information (GTI) Encoding</name>
       <section numbered="true" toc="default">
-        <name>OSPFv2 Transport Instance Information Encoding</name>
+        <name>OSPFv2-GT Information Encoding</name>
         <t>
-      Application specific information will be flooded in opaque LSAs as
-      specified in <xref target="RFC5250" format="default"/>. An Opaque LSA option code will be
-      reserved for Transport Instance Information (TII) as described
-      in <xref target="IANA" format="default"/>. The TII LSA can be advertised at any of
-      the defined flooding scopes (link, area, or autonomous system (AS)).
+          Application specific information will be flooded in opaque LSAs as
+          specified in <xref target="RFC5250" format="default"/>. An Opaque LSA option code will be
+          reserved for Generalized Transport Information (GTI) as described
+          in <xref target="IANA" format="default"/>. The GTI LSA can be advertised at any of
+          the defined flooding scopes (link, area, or autonomous system (AS)).
         </t>
         <figure>
-          <name>OSPFv2 Transport Instance Information Opaque LSA</name>
+          <name>OSPFv2-GT Information Opaque LSA</name>
           <artwork name="" type="" align="left" alt=""><![CDATA[
    0                   1                   2                   3
    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
@@ -412,27 +470,27 @@
 
 g    ]]></artwork>
         </figure>
-        <t> 
-   The format of the TLVs within the body of an TII LSA is as defined in
-   <xref target="TTI-TLVS" format="default"/>.
+        <t>
+          The format of the TLVs within the body of an GTI LSA is as defined in
+          <xref target="GTI-TLVS" format="default"/>.
         </t>
       </section>
       <section numbered="true" toc="default">
-        <name>OSPFv3 Transport Instance Information Encoding</name>
+        <name>OSPFv3-GT Information Encoding</name>
         <t>
-      Application specific information will be flooded in separate LSAs
-      with a separate function code. 
-      Refer to section A.4.2.1 of <xref target="RFC5340" format="default"/>.
-      for information on the LS Type encoding in OSPFv3, and section 2 of
-      <xref target="RFC8362" format="default"/> for OSPFv3 extended LSA types. An OSPFv3 function
-      code will be reserved for Transport Instance
-      Information (TII) as described in <xref target="IANA" format="default"/>. Same as
-      OSPFv2, the TII LSA can be advertised at any of the defined flooding scopes 
-      (link, area, or autonomous system (AS)).  The U bit will be set indicating
-      that OSPFv3 TTI LSAs should be flooded even if it is not understood. 
+          Application specific information will be flooded in separate LSAs
+          with a separate function code.
+          Refer to section A.4.2.1 of <xref target="RFC5340" format="default"/>.
+          for information on the LS Type encoding in OSPFv3, and section 2 of
+          <xref target="RFC8362" format="default"/> for OSPFv3 extended LSA types. An OSPFv3 function
+          code will be reserved for Generalized Transport  Information (GTI) as described in
+          <xref target="IANA" format="default"/>. Same as
+          OSPFv2-GT, the GTI LSA can be advertised at any of the defined flooding scopes
+          (link, area, or autonomous system (AS)).  The U bit will be set indicating
+          that OSPFv3 GTI LSAs should be flooded even if it is not understood.
         </t>
         <figure>
-          <name>OSPFv3 Transport Instance Information LSA</name>
+          <name>OSPFv3-GT Information LSA</name>
           <artwork name="" type="" align="left" alt=""><![CDATA[
    0                   1                   2                   3
    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
@@ -453,19 +511,19 @@ g    ]]></artwork>
 
   ]]></artwork>
         </figure>
-        <t> 
-   The format of the TLVs within the body of an TII LSA is as defined in
-   <xref target="TTI-TLVS" format="default"/>.
+        <t>
+          The format of the TLVs within the body of an GTI LSA is as defined in
+          <xref target="GTI-TLVS" format="default"/>.
         </t>
       </section>
-      <section anchor="TTI-TLVS" numbered="true" toc="default">
-        <name>Transport Instance Information (TII) TLV Encoding</name>
+      <section anchor="GTI-TLVS" numbered="true" toc="default">
+        <name>Generalized Transport Information (GTI) TLV Encoding</name>
         <t>
-   The format of the TLVs within the body of the LSAs
-   containing non-routing information is the same as the format used by the Traffic
-   Engineering Extensions to OSPF <xref target="RFC3630" format="default"/>. The LSA payload
-   consists of one or more nested Type/Length/Value (TLV) triplets.
-   The format of each TLV is:
+          The format of the TLVs within the body of the LSAs
+          containing non-routing information is the same as the format used by the Traffic
+          Engineering Extensions to OSPF <xref target="RFC3630" format="default"/>. The LSA payload
+          consists of one or more nested Type/Length/Value (TLV) triplets.
+          The format of each TLV is:
         </t>
         <figure>
           <name>TLV Format</name>
@@ -480,16 +538,17 @@ g    ]]></artwork>
   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
     ]]></artwork>
-        </figure>
-        <section anchor="TIIA-TLV" numbered="true" toc="default">
-          <name>Top-Level TII Application TLV</name>
-          <t>An Application top-level TLV will be used to encapsulate application
-     data advertised within TII LSAs.   
-     This top-level TLV may be used to handle the local publication/subscription
-     for application specific data. The details of such a publication/subscription
-     mechanism are beyond the scope of this document.
-     An Application ID is used in the top-level application TLV and shares
-     the same code point with IS-IS as defined in <xref target="RFC6823" format="default"/>.
+</figure>
+<section anchor="GTIA-TLV" numbered="true" toc="default">
+          <name>Top-Level GTI Application TLV</name>
+          <t>
+            An Application top-level TLV will be used to encapsulate application
+            data advertised within GTI LSAs.
+            This top-level TLV may be used to handle the local publication/subscription
+            for application specific data. The details of such a publication/subscription
+            mechanism are beyond the scope of this document.
+            An Application ID is used in the top-level application TLV and shares
+            the same code point with IS-IS as defined in <xref target="RFC6823" format="default"/>.
           </t>
           <figure>
             <name>Top-Level TLV</name>
@@ -509,19 +568,19 @@ g    ]]></artwork>
 
   Application ID:
     An identifier assigned to this application via the IANA registry,
-    as defined in RFC 6823. Each unique application will have a
-    unique ID.
+    as defined in RFC 6823 [RFC6823]. Each unique application will
+    have a unique ID.
 
   Additional Application-Specific Sub-TLVs:
-    Additional information defined by applications can be encoded as 
-    Sub-TLVs. Definition of such information is beyond the scope of 
+    Additional information defined by applications can be encoded as
+    Sub-TLVs. Definition of such information is beyond the scope of
     this document.
      ]]></artwork>
-          </figure>
+     </figure>
           <t>
-   The specific TLVs and sub-TLVs relating to a given application and
-   the corresponding IANA considerations MUST be specified in the 
-   document corresponding to that application.
+            The specific TLVs and sub-TLVs relating to a given application and
+            the corresponding IANA considerations MUST be specified in the
+            document corresponding to that application.
           </t>
         </section>
       </section>
@@ -532,9 +591,13 @@ g    ]]></artwork>
     <section numbered="true" toc="default">
       <name>Security Considerations</name>
       <t>
-   The security considerations for the Transport Instance will not be
-   different for those for OSPFv2 <xref target="RFC2328" format="default"/> and
-   OSPFv3 <xref target="RFC5340" format="default"/>.
+        The security considerations for OSPF-GT will be similar to
+        those for OSPFv2 <xref target="RFC2328" format="default"/> and
+        OSPFv3 <xref target="RFC5340" format="default"/>. However, since OSPF-GT is
+        not used to update OSPF routing, the consequences of attacks will be
+        dependent on advertised non-routing information. Document availing OSPF-GT for
+        non-routing information dissemination MUST documents the Security Considerations
+        pertaining to this information.
       </t>
     </section>
     <section anchor="IANA" numbered="true" toc="default">
@@ -542,27 +605,28 @@ g    ]]></artwork>
       <section numbered="true" toc="default">
         <name>OSPFv2 Opaque LSA Type Assignment</name>
         <t>
-       IANA is requested to assign an option type, TBD1, for Transport Instance Information (TII)
-       LSA from the "Opaque Link-State Advertisements (LSA) Option Types" registry.
+          IANA is requested to assign an option type, TBD1, for Generalized Transport
+          Information (GTI) LSA from the "Opaque Link-State Advertisements (LSA)
+          Option Types" registry.
         </t>
       </section>
       <section numbered="true" toc="default">
         <name>OSPFv3 LSA Function Code Assignment</name>
         <t>
-       IANA is requested to assign a function code, TBD2, for Transport Instance Information (TII)
-       LSAs from the "OSPFv3 LSA Function Codes" registry.
+          IANA is requested to assign a function code, TBD2, for Generalized Transport
+          Information (GTI) LSAs from the "OSPFv3 LSA Function Codes" registry.
         </t>
       </section>
       <section numbered="true" toc="default">
-        <name>OSPF Transport Instance Information Top-Level TLV Registry</name>
+        <name>OSPF-GT Instance Information Top-Level TLV Registry</name>
         <t>
-       IANA is requested to create a registry for OSPF Transport Instance Information (TII)
+       IANA is requested to create a registry for OSPF Generalized Transport Information (GTI)
        Top-Level TLVs. The first available TLV (1) is assigned to the
-       Application TLV <xref target="TIIA-TLV" format="default"/>. The allocation of the unsigned 16-bit
+       Application TLV <xref target="GTI-TLVS" format="default"/>. The allocation of the unsigned 16-bit
        TLV type are defined in the table below.
         </t>
         <figure>
-          <name>TII Top-Level TLV Registry Assignments</name>
+          <name>GTI Top-Level TLV Registry Assignments</name>
           <artwork name="" type="" align="left" alt=""><![CDATA[
           +-------------+-----------------------------------+
           | Range       | Assignment Policy                 |
@@ -579,14 +643,14 @@ g    ]]></artwork>
           |             |                                   |
           | 32778-65535 | Reserved (Not to be assigned)     |
           +-----------+-------------------------------------+
-]]></artwork>
+          ]]></artwork>
         </figure>
       </section>
     </section>
     <section numbered="true" toc="default">
       <name>Acknowledgement</name>
       <t>
-  The authors would like to thank Les Ginsberg for review and comments. 
+        The authors would like to thank Les Ginsberg for review and comments.
       </t>
     </section>
   </middle>
@@ -597,237 +661,20 @@ g    ]]></artwork>
       <name>References</name>
       <references>
         <name>Normative References</name>
-        <reference anchor="RFC2119" target="https://www.rfc-editor.org/info/rfc2119" xml:base="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.2119.xml">
-          <front>
-            <title>Key words for use in RFCs to Indicate Requirement Levels</title>
-            <author initials="S." surname="Bradner" fullname="S. Bradner">
-              <organization/>
-            </author>
-            <date year="1997" month="March"/>
-            <abstract>
-              <t>In many standards track documents several words are used to signify the requirements in the specification.  These words are often capitalized. This document defines these words as they should be interpreted in IETF documents.  This document specifies an Internet Best Current Practices for the Internet Community, and requests discussion and suggestions for improvements.</t>
-            </abstract>
-          </front>
-          <seriesInfo name="BCP" value="14"/>
-          <seriesInfo name="RFC" value="2119"/>
-          <seriesInfo name="DOI" value="10.17487/RFC2119"/>
-        </reference>
-        <reference anchor="RFC2328" target="https://www.rfc-editor.org/info/rfc2328" xml:base="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.2328.xml">
-          <front>
-            <title>OSPF Version 2</title>
-            <author initials="J." surname="Moy" fullname="J. Moy">
-              <organization/>
-            </author>
-            <date year="1998" month="April"/>
-            <abstract>
-              <t>This memo documents version 2 of the OSPF protocol.  OSPF is a link- state routing protocol.  [STANDARDS-TRACK]</t>
-            </abstract>
-          </front>
-          <seriesInfo name="STD" value="54"/>
-          <seriesInfo name="RFC" value="2328"/>
-          <seriesInfo name="DOI" value="10.17487/RFC2328"/>
-        </reference>
-        <reference anchor="RFC3630" target="https://www.rfc-editor.org/info/rfc3630" xml:base="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.3630.xml">
-          <front>
-            <title>Traffic Engineering (TE) Extensions to OSPF Version 2</title>
-            <author initials="D." surname="Katz" fullname="D. Katz">
-              <organization/>
-            </author>
-            <author initials="K." surname="Kompella" fullname="K. Kompella">
-              <organization/>
-            </author>
-            <author initials="D." surname="Yeung" fullname="D. Yeung">
-              <organization/>
-            </author>
-            <date year="2003" month="September"/>
-            <abstract>
-              <t>This document describes extensions to the OSPF protocol version 2 to support intra-area Traffic Engineering (TE), using Opaque Link State Advertisements.</t>
-            </abstract>
-          </front>
-          <seriesInfo name="RFC" value="3630"/>
-          <seriesInfo name="DOI" value="10.17487/RFC3630"/>
-        </reference>
-        <reference anchor="RFC4915" target="https://www.rfc-editor.org/info/rfc4915" xml:base="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.4915.xml">
-          <front>
-            <title>Multi-Topology (MT) Routing in OSPF</title>
-            <author initials="P." surname="Psenak" fullname="P. Psenak">
-              <organization/>
-            </author>
-            <author initials="S." surname="Mirtorabi" fullname="S. Mirtorabi">
-              <organization/>
-            </author>
-            <author initials="A." surname="Roy" fullname="A. Roy">
-              <organization/>
-            </author>
-            <author initials="L." surname="Nguyen" fullname="L. Nguyen">
-              <organization/>
-            </author>
-            <author initials="P." surname="Pillay-Esnault" fullname="P. Pillay-Esnault">
-              <organization/>
-            </author>
-            <date year="2007" month="June"/>
-            <abstract>
-              <t>This document describes an extension to Open Shortest Path First (OSPF) in order to define independent IP topologies called Multi- Topologies (MTs).  The Multi-Topologies extension can be used for computing different paths for unicast traffic, multicast traffic, different classes of service based on flexible criteria, or an in- band network management topology.</t>
-              <t>An optional extension to exclude selected links from the default topology is also described.  [STANDARDS-TRACK]</t>
-            </abstract>
-          </front>
-          <seriesInfo name="RFC" value="4915"/>
-          <seriesInfo name="DOI" value="10.17487/RFC4915"/>
-        </reference>
-        <reference anchor="RFC5250" target="https://www.rfc-editor.org/info/rfc5250" xml:base="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.5250.xml">
-          <front>
-            <title>The OSPF Opaque LSA Option</title>
-            <author initials="L." surname="Berger" fullname="L. Berger">
-              <organization/>
-            </author>
-            <author initials="I." surname="Bryskin" fullname="I. Bryskin">
-              <organization/>
-            </author>
-            <author initials="A." surname="Zinin" fullname="A. Zinin">
-              <organization/>
-            </author>
-            <author initials="R." surname="Coltun" fullname="R. Coltun">
-              <organization/>
-            </author>
-            <date year="2008" month="July"/>
-            <abstract>
-              <t>This document defines enhancements to the OSPF protocol to support a new class of link state advertisements (LSAs) called Opaque LSAs.  Opaque LSAs provide a generalized mechanism to allow for the future extensibility of OSPF.  Opaque LSAs consist of a standard LSA header followed by application-specific information.  The information field may be used directly by OSPF or by other applications.  Standard OSPF link-state database flooding mechanisms are used to distribute Opaque LSAs to all or some limited portion of the OSPF topology.</t>
-              <t>This document replaces RFC 2370 and adds to it a mechanism to enable an OSPF router to validate Autonomous System (AS)-scope Opaque LSAs originated outside of the router's OSPF area.  [STANDARDS-TRACK]</t>
-            </abstract>
-          </front>
-          <seriesInfo name="RFC" value="5250"/>
-          <seriesInfo name="DOI" value="10.17487/RFC5250"/>
-        </reference>
-        <reference anchor="RFC5340" target="https://www.rfc-editor.org/info/rfc5340" xml:base="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.5340.xml">
-          <front>
-            <title>OSPF for IPv6</title>
-            <author initials="R." surname="Coltun" fullname="R. Coltun">
-              <organization/>
-            </author>
-            <author initials="D." surname="Ferguson" fullname="D. Ferguson">
-              <organization/>
-            </author>
-            <author initials="J." surname="Moy" fullname="J. Moy">
-              <organization/>
-            </author>
-            <author initials="A." surname="Lindem" fullname="A. Lindem">
-              <organization/>
-            </author>
-            <date year="2008" month="July"/>
-            <abstract>
-              <t>This document describes the modifications to OSPF to support version 6 of the Internet Protocol (IPv6).  The fundamental mechanisms of OSPF (flooding, Designated Router (DR) election, area support, Short Path First (SPF) calculations, etc.) remain unchanged.  However, some changes have been necessary, either due to changes in protocol semantics between IPv4 and IPv6, or simply to handle the increased address size of IPv6.  These modifications will necessitate incrementing the protocol version from version 2 to version 3.  OSPF for IPv6 is also referred to as OSPF version 3 (OSPFv3).</t>
-              <t>Changes between OSPF for IPv4, OSPF Version 2, and OSPF for IPv6 as described herein include the following.  Addressing semantics have been removed from OSPF packets and the basic Link State Advertisements (LSAs).  New LSAs have been created to carry IPv6 addresses and prefixes.  OSPF now runs on a per-link basis rather than on a per-IP-subnet basis.  Flooding scope for LSAs has been generalized.  Authentication has been removed from the OSPF protocol and instead relies on IPv6's Authentication Header and Encapsulating Security Payload (ESP).</t>
-              <t>Even with larger IPv6 addresses, most packets in OSPF for IPv6 are almost as compact as those in OSPF for IPv4.  Most fields and packet- size limitations present in OSPF for IPv4 have been relaxed.  In addition, option handling has been made more flexible.</t>
-              <t>All of OSPF for IPv4's optional capabilities, including demand circuit support and Not-So-Stubby Areas (NSSAs), are also supported in OSPF for IPv6.  [STANDARDS-TRACK]</t>
-            </abstract>
-          </front>
-          <seriesInfo name="RFC" value="5340"/>
-          <seriesInfo name="DOI" value="10.17487/RFC5340"/>
-        </reference>
-        <reference anchor="RFC6549" target="https://www.rfc-editor.org/info/rfc6549" xml:base="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.6549.xml">
-          <front>
-            <title>OSPFv2 Multi-Instance Extensions</title>
-            <author initials="A." surname="Lindem" fullname="A. Lindem">
-              <organization/>
-            </author>
-            <author initials="A." surname="Roy" fullname="A. Roy">
-              <organization/>
-            </author>
-            <author initials="S." surname="Mirtorabi" fullname="S. Mirtorabi">
-              <organization/>
-            </author>
-            <date year="2012" month="March"/>
-            <abstract>
-              <t>OSPFv3 includes a mechanism to support multiple instances of the protocol running on the same interface.  OSPFv2 can utilize such a mechanism in order to support multiple routing domains on the same subnet.</t>
-              <t>This document defines the OSPFv2 Instance ID to enable separate OSPFv2 protocol instances on the same interface.  Unlike OSPFv3 where the Instance ID can be used for multiple purposes, such as putting the same interface in multiple areas, the OSPFv2 Instance ID is reserved for identifying protocol instances.</t>
-              <t>This document updates RFC 2328.  [STANDARDS-TRACK]</t>
-            </abstract>
-          </front>
-          <seriesInfo name="RFC" value="6549"/>
-          <seriesInfo name="DOI" value="10.17487/RFC6549"/>
-        </reference>
-        <reference anchor="RFC6823" target="https://www.rfc-editor.org/info/rfc6823" xml:base="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.6823.xml">
-          <front>
-            <title>Advertising Generic Information in IS-IS</title>
-            <author initials="L." surname="Ginsberg" fullname="L. Ginsberg">
-              <organization/>
-            </author>
-            <author initials="S." surname="Previdi" fullname="S. Previdi">
-              <organization/>
-            </author>
-            <author initials="M." surname="Shand" fullname="M. Shand">
-              <organization/>
-            </author>
-            <date year="2012" month="December"/>
-            <abstract>
-              <t>This document describes the manner in which generic application information (i.e., information not directly related to the operation of the Intermediate System to Intermediate System (IS-IS) protocol) should be advertised in IS-IS Link State Protocol Data Units (LSPs) and defines guidelines that should be used when flooding such information.</t>
-            </abstract>
-          </front>
-          <seriesInfo name="RFC" value="6823"/>
-          <seriesInfo name="DOI" value="10.17487/RFC6823"/>
-        </reference>
-        <reference anchor="RFC8174" target="https://www.rfc-editor.org/info/rfc8174" xml:base="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8174.xml">
-          <front>
-            <title>Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words</title>
-            <author initials="B." surname="Leiba" fullname="B. Leiba">
-              <organization/>
-            </author>
-            <date year="2017" month="May"/>
-            <abstract>
-              <t>RFC 2119 specifies common key words that may be used in protocol  specifications.  This document aims to reduce the ambiguity by clarifying that only UPPERCASE usage of the key words have the  defined special meanings.</t>
-            </abstract>
-          </front>
-          <seriesInfo name="BCP" value="14"/>
-          <seriesInfo name="RFC" value="8174"/>
-          <seriesInfo name="DOI" value="10.17487/RFC8174"/>
-        </reference>
-        <reference anchor="RFC8362" target="https://www.rfc-editor.org/info/rfc8362" xml:base="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8362.xml">
-          <front>
-            <title>OSPFv3 Link State Advertisement (LSA) Extensibility</title>
-            <author initials="A." surname="Lindem" fullname="A. Lindem">
-              <organization/>
-            </author>
-            <author initials="A." surname="Roy" fullname="A. Roy">
-              <organization/>
-            </author>
-            <author initials="D." surname="Goethals" fullname="D. Goethals">
-              <organization/>
-            </author>
-            <author initials="V." surname="Reddy Vallem" fullname="V. Reddy Vallem">
-              <organization/>
-            </author>
-            <author initials="F." surname="Baker" fullname="F. Baker">
-              <organization/>
-            </author>
-            <date year="2018" month="April"/>
-            <abstract>
-              <t>OSPFv3 requires functional extension beyond what can readily be done with the fixed-format Link State Advertisement (LSA) as described in RFC 5340.  Without LSA extension, attributes associated with OSPFv3 links and advertised IPv6 prefixes must be advertised in separate LSAs and correlated to the fixed-format LSAs.  This document extends the LSA format by encoding the existing OSPFv3 LSA information in Type-Length-Value (TLV) tuples and allowing advertisement of additional information with additional TLVs.  Backward-compatibility mechanisms are also described.</t>
-              <t>This document updates RFC 5340, "OSPF for IPv6", and RFC 5838, "Support of Address Families in OSPFv3", by providing TLV-based encodings for the base OSPFv3 unicast support and OSPFv3 address family support.</t>
-            </abstract>
-          </front>
-          <seriesInfo name="RFC" value="8362"/>
-          <seriesInfo name="DOI" value="10.17487/RFC8362"/>
-        </reference>
+        <xi:include href="https://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.2119.xml"/>
+        <xi:include href="https://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.2328.xml"/>
+        <xi:include href="https://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.3630.xml"/>
+        <xi:include href="https://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.4915.xml"/>
+        <xi:include href="https://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.5250.xml"/>
+        <xi:include href="https://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.5340.xml"/>
+        <xi:include href="https://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.6549.xml"/>
+        <xi:include href="https://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.6823.xml"/>
+        <xi:include href="https://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.8174.xml"/>
+        <xi:include href="https://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.8362.xml"/>
       </references>
       <references>
         <name>Informative References</name>
-        <reference anchor="RFC5572" target="https://www.rfc-editor.org/info/rfc5572" xml:base="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.5572.xml">
-          <front>
-            <title>IPv6 Tunnel Broker with the Tunnel Setup Protocol (TSP)</title>
-            <author initials="M." surname="Blanchet" fullname="M. Blanchet">
-              <organization/>
-            </author>
-            <author initials="F." surname="Parent" fullname="F. Parent">
-              <organization/>
-            </author>
-            <date year="2010" month="February"/>
-            <abstract>
-              <t>A tunnel broker with the Tunnel Setup Protocol (TSP) enables the establishment of tunnels of various inner protocols, such as IPv6 or IPv4, inside various outer protocols packets, such as IPv4, IPv6, or UDP over IPv4 for IPv4 NAT traversal.  The control protocol (TSP) is used by the tunnel client to negotiate the tunnel with the broker.  A mobile node implementing TSP can be connected to both IPv4 and IPv6 networks whether it is on IPv4 only, IPv4 behind a NAT, or on IPv6 only.  A tunnel broker may terminate the tunnels on remote tunnel servers or on itself.  This document describes the TSP within the model of the tunnel broker model.  This document defines an Experimental  Protocol for the Internet community.</t>
-            </abstract>
-          </front>
-          <seriesInfo name="RFC" value="5572"/>
-          <seriesInfo name="DOI" value="10.17487/RFC5572"/>
-        </reference>
+        <xi:include href="https://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.5572.xml"/>
         <reference anchor="I-D.wang-lsr-igp-extensions-ifit" xml:base="https://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.draft-wang-lsr-igp-extensions-ifit-01.xml" target="http://www.ietf.org/internet-drafts/draft-wang-lsr-igp-extensions-ifit-01.txt">
           <front>
             <title>IGP Extensions for In-situ Flow Information Telemetry (IFIT) Capability Advertisement</title>
@@ -848,7 +695,14 @@ g    ]]></artwork>
             </author>
             <date month="July" day="28" year="2020"/>
             <abstract>
-              <t>This document extends Node and Link Attribute TLVs to Interior Gateway Protocols (IGP) to advertise supported In-situ Flow Information Telemetry (IFIT) capabilities at node and/or link granularity.  An ingress router cannot insert IFIT-Data-Fields for packets going into a path unless an egress router has indicated via signaling that it has the capability to process IFIT-Data-Fields.  In addition, such advertisements would be useful for ingress routers to gather each router's IFIT capability for achieving the computation of Traffic Engineering (TE) paths or loose TE paths that be able to fulfill the visibility of on-path OAM data.</t>
+              <t>
+                This document extends Node and Link Attribute TLVs to Interior Gateway Protocols (IGP) to advertise
+                supported In-situ Flow Information Telemetry (IFIT) capabilities at node and/or link granularity.
+                An ingress router cannot insert IFIT-Data-Fields for packets going into a path unless an egress router has
+                indicated via signaling that it has the capability to process IFIT-Data-Fields.  In addition,
+                such advertisements would be useful for ingress routers to gather each router's IFIT capability for achieving the computation
+                of Traffic Engineering (TE) paths or loose TE paths that be able to fulfill the visibility of on-path OAM data.
+              </t>
             </abstract>
           </front>
           <seriesInfo name="Internet-Draft" value="draft-wang-lsr-igp-extensions-ifit-01"/>
