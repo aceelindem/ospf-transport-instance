@@ -88,7 +88,7 @@
         neighbors are not required to be directly attached since they are never
         used to compute hop-by-hop routing. Consequently, independent sparse topologies
         can be defined to dissemenate non-routing information only to those OSPF-GT
-        routers requiring it. 
+        routers requiring it.
       </t>
     </abstract>
   </front>
@@ -208,9 +208,22 @@
 	  with a controller to the a one or two routers in an OSPF domain.
 	  However, many times those router(s) do not have full visibility to the
 	  complete topology of all the areas. To solve this problem without
-          extending the BGP-LS domain, the OSPF LSAs for non-local area could
+          extending the BGP-LS domain, the OSPF LSAs for non-local areas could
           be flooded over the OSPF-GT topology using
 	  remote neighbors <xref target="remote-neighbor" format="default"/>.
+        </t>
+      </section>
+      <section numbered="true" toc="default">
+        <name>BGP-LS Replacement</name>
+        <t>
+          This mechansism could also be used to replace BGP-LS
+          <xref target="RFC5572" format="default"/> completely by advertising
+          the entire Link State Database (LSDB) using an OSPF-GT topology with
+          the controller(s) as remote neighbors <xref target="remote-neighbor"/>.
+          The mechanism could also be extended to advertise IS-IS LSPs within
+          OSPF-GT Information LSAs as described in <xref target="gti-encoding"/>.
+          However, the details of BGP-LS replacement are beyond the scope of
+          this document.
         </t>
       </section>
     </section>
@@ -442,7 +455,7 @@
          </t>
       </section>
     </section>
-    <section numbered="true" toc="default">
+    <section anchor="gti-encoding" numbered="true" toc="default">
       <name>OSPF Generialized Transport Information (GTI) Encoding</name>
       <section numbered="true" toc="default">
         <name>OSPFv2-GT Information Encoding</name>
