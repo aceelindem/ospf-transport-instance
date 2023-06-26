@@ -13,16 +13,16 @@
 <?rfc compact="yes"?>
 <?rfc subcompact="no"?>
 <?rfc strict="yes" ?>
-<rfc xmlns:xi="http://www.w3.org/2001/XInclude" category="std" ipr="trust200902" docName="draft-ietf-lsr-ospf-transport-instance-04"
+<rfc xmlns:xi="http://www.w3.org/2001/XInclude" category="std" ipr="trust200902" docName="draft-ietf-lsr-ospf-transport-instance-05"
      obsoletes="" updates="" submissionType="IETF" xml:lang="en" tocInclude="true" tocDepth="6" symRefs="true"
      sortRefs="true" consensus="true" version="3">
   <!-- xml2rfc v2v3 conversion 3.12.3 -->
   <!-- ***** FRONT MATTER ***** -->
   <front>
     <title abbrev="OSPF-GT">OSPF-GT (Generalized Transport)</title>
-    <seriesInfo name="Internet-Draft" value="draft-ietf-lsr-ospf-transport-instance-03"/>
+    <seriesInfo name="Internet-Draft" value="draft-ietf-lsr-ospf-transport-instance-05"/>
     <author initials="A" surname="Lindem" fullname="Acee Lindem">
-      <organization>Cisco Systems</organization>
+      <organization>LabN Consulting LLC</organization>
       <address>
         <postal>
           <street>301 Midenhall Way</street>
@@ -30,7 +30,7 @@
           <country>UNITED STATES</country>
         </postal>
         <phone/>
-        <email>acee@cisco.com</email>
+        <email>acee.ietf@gmail.com</email>
       </address>
     </author>
     <author fullname="Yingzhen Qu" initials="Y" surname="Qu">
@@ -609,6 +609,18 @@ g    ]]></artwork>
     </section>
     <section numbered="true" toc="default">
       <name>Manageability Considerations</name>
+      <t>
+        Since OSPF-GT is partioned into one of more separate instances, all the
+        existing OSPF management information will be available for that instance.
+        This will enabled ease in managing individual applications. Additionally,
+        an the operational data for OSPF-GT LSAs should include an indication of
+        whether or not the "condition of reachability" is met for the application.
+      </t>
+      <t>
+        It is RECOMMENDED that reachability for remote neighors 
+        <xref target="remote-neighbor" format="default"/>
+        through the unicast topology be reported as part of the operational data.
+      </t>   
     </section>
     <section numbered="true" toc="default">
       <name>Security Considerations</name>
