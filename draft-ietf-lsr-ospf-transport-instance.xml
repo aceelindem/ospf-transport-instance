@@ -13,14 +13,14 @@
 <?rfc compact="yes"?>
 <?rfc subcompact="no"?>
 <?rfc strict="yes" ?>
-<rfc xmlns:xi="http://www.w3.org/2001/XInclude" category="std" ipr="trust200902" docName="draft-ietf-lsr-ospf-transport-instance-07"
+<rfc xmlns:xi="http://www.w3.org/2001/XInclude" category="std" ipr="trust200902" docName="draft-ietf-lsr-ospf-transport-instance-08"
      obsoletes="" updates="" submissionType="IETF" xml:lang="en" tocInclude="true" tocDepth="6" symRefs="true"
      sortRefs="true" consensus="true" version="3">
   <!-- xml2rfc v2v3 conversion 3.12.3 -->
   <!-- ***** FRONT MATTER ***** -->
   <front>
     <title abbrev="OSPF-GT">OSPF-GT (Generalized Transport)</title>
-    <seriesInfo name="Internet-Draft" value="draft-ietf-lsr-ospf-transport-instance-07"/>
+    <seriesInfo name="Internet-Draft" value="draft-ietf-lsr-ospf-transport-instance-08"/>
     <author initials="A" surname="Lindem" fullname="Acee Lindem">
       <organization>LabN Consulting, L.L.C.</organization>
       <address>
